@@ -168,7 +168,14 @@ services:
       # Uncomment to bypass nonce check in ID Token flow. Commonly set to true when using Google Sign In on mobile.
       # GOTRUE_EXTERNAL_SKIP_NONCE_CHECK: "true"
 
-      # GOTRUE_MAILER_SECURE_EMAIL_CHANGE_ENABLED: "true"
+      # TeamSync 365: an email change mails only the new address, the one
+      # being proved.
+      GOTRUE_MAILER_SECURE_EMAIL_CHANGE_ENABLED: "false"
+      # TeamSync 365: every mail is written and sent by a database function
+      # (supabase/schema/0020_mail.sql in the app repository), not over the
+      # SMTP settings below, which stay unused.
+      GOTRUE_HOOK_SEND_EMAIL_ENABLED: "true"
+      GOTRUE_HOOK_SEND_EMAIL_URI: "pg-functions://postgres/private/hook_send_email"
       # GOTRUE_SMTP_MAX_FREQUENCY: 1s
       GOTRUE_SMTP_ADMIN_EMAIL: ${SMTP_ADMIN_EMAIL}
       GOTRUE_SMTP_HOST: ${SMTP_HOST}
