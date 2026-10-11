@@ -279,6 +279,17 @@ services:
     # This container name looks inconsistent but is correct because realtime constructs tenant id by parsing the subdomain
     image: supabase/realtime:v2.76.5
     restart: unless-stopped
+    # TeamSync 365: volumes/api/kong.yml sends /realtime/v1 to
+    # realtime-dev.supabase-realtime:4000, the container name upstream
+    # Supabase gives this service. This compose file sets no container name,
+    # so that host did not resolve and every Realtime request answered
+    # 503 "name resolution failed". The alias gives the service that name on
+    # the compose network. (Realtime reads its tenant, realtime-dev, from the
+    # first label of the Host header, so the name itself must stay as it is.)
+    networks:
+      default:
+        aliases:
+          - realtime-dev.supabase-realtime
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
